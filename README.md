@@ -1,71 +1,46 @@
-xhgui
+Predator 
 =====
 
-A graphical interface for XHProf data built on MongoDB.
+Predator 是一款基于基于xhgui改进的图形管理界面，使用方法和xhgui完全一致。主要调整和优化的以下功能：
 
-This tool requires that [XHProf](http://pecl.php.net/package/xhprof) or its one
-of its forks [Uprofiler](https://github.com/FriendsOfPHP/uprofiler),
-[Tideways](https://github.com/tideways/php-profiler-extension) are installed.
-XHProf is a PHP Extension that records and provides profiling data.
-XHGui (this tool) takes that information, saves it in MongoDB, and provides
-a convenient GUI for working with it.
+1、更改bytes为kb或者mb，µs改为ms或者s，日期格式改为年-月-日 时：分：秒。
 
-[![Build Status](https://travis-ci.org/perftools/xhgui.svg?branch=master)](https://travis-ci.org/perftools/xhgui)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/perftools/xhgui/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/perftools/xhgui/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/perftools/xhgui/?branch=master)
+2、列表项新增IP地址、显示完整访问地址。
 
-System Requirements
+3、增加多域名显示功能，增加登录验证功
+
+系统运行条件
 ===================
 
-XHGui has the following requirements:
+Predator运行有以下需求:
 
- * PHP version 5.5 or later.
- * [XHProf](http://pecl.php.net/package/xhprof),
+ * PHP 版本大于或者等于5.5.
+ * 系统支持[XHProf](http://pecl.php.net/package/xhprof),
    [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
-   [Tideways](https://github.com/tideways/php-profiler-extension) to actually profile the data.
- * [MongoDB Extension](http://pecl.php.net/package/mongo) MongoDB PHP driver.
-   XHGui requires verison 1.3.0 or later.
- * [MongoDB](http://www.mongodb.org/) MongoDB Itself. XHGui requires version 2.2.0 or later.
+   [Tideways](https://github.com/tideways/php-profiler-extension) 这几个性能监控组件.
+ * [MongoDB Extension](http://pecl.php.net/package/mongo) MongoDB PHP 扩展版本必须大于或者等于1.3.0.
+ * [MongoDB](http://www.mongodb.org/) MongoDB版本必须大于或者等于 2.2.0.
  * [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
    you'll need the DOM extension (which is a dependency of PHPUnit).
 
 
-Installation
+安装说明
 ============
 
-1. Clone or download `xhgui` from Github.
+1. 从Github上克隆Predator项目代码.
 
-2. Point your webserver to the `webroot` directory.
+2. 服务器根目录指定到 Predator 文件夹下的 webroot目录.
 
-3. Set the permissions on the `cache` directory to allow the
-   webserver to create files. If you're lazy, `0777` will work.
+3. 设置 cache 目录权限为 07777。Linux运行如下命令：chmod 0777 cache -R
 
-   The following command changes the permissions for the `cache` directory:
+4. 安装并启动MongoDB（config/config.php文件中的配置选项请根据实现情况进行调整）.
 
-   ```bash
-   chmod -R 0777 cache
-   ```
+5. 使用db.collection.ensureIndex()命令为MongoDB添加索引.代码示例如下：系统默认使用
+Predator数据库。代码示例如下：
 
-4. Start a MongoDB instance. XHGui uses the MongoDB instance to store
-   profiling data.
-
-5. If your MongoDB setup uses authentication, or isn't running on the
-   default port and localhost, update XHGui's `config/config.php` so that XHGui
-   can connect to your `mongod` instance.
-
-6. (**Optional**, but recommended) Add indexes to MongoDB to improve performance.
-
-   XHGui stores profiling information in a `results` collection in the
-   `xhprof` database in MongoDB. Adding indexes improves performance,
-   letting you navigate pages more quickly.
-
-   To add an index, open a `mongo` shell from your command prompt.
-   Then, use MongoDB's `db.collection.ensureIndex()` method to add
-   the indexes, as in the following:
-
-   ```
+ ```
    $ mongo
-   > use xhprof
+   > use predator
    > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
    > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
    > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
@@ -74,23 +49,22 @@ Installation
    > db.results.ensureIndex( { 'meta.simple_url' : 1 } )
    ```
 
-7. Run XHGui's install script. The install script downloads composer and
-   uses it to install the XHGui's dependencies.
+6. 进入目录后使用php install.php 来安装 composer 来管理系统所需要的扩展。代码示例如下：
 
    ```bash
    cd path/to/xhgui
    php install.php
    ```
 
-8. Set up your webserver. The Configuration section below describes how
-   to setup the rewrite rules for both nginx and apache.
+7. 对Web服务器进行配置。
 
-Configuration
+服务器配置
 =============
 
-Configure Webserver Re-Write Rules
+配置服务器重写规则
 ----------------------------------
 
+建议使用Rewrite重写规则来进行配置，
 XHGui prefers to have URL rewriting enabled, but will work without it.
 For Apache, you can do the following to enable URL rewriting:
 
@@ -139,8 +113,7 @@ server {
 }
 ```
 
-
-Configure XHGui Profiling Rate
+配置 Predator 采样率
 -------------------------------
 
 After installing XHGui, you may want to do change how frequently you
@@ -203,23 +176,6 @@ return array(
 ```
 
 The URL argument is the `REQUEST_URI` or `argv` value.
-
-Configure ignored functions
----------------------------
-
-You can use the `profiler.options` configuration value to set additional options
-for the profiler extension. This is useful when you want to exclude specific
-functions from your profiler data:
-
-```php
-// In config/config.php
-return array(
-    //Other config
-    'profiler.options' => [
-        'ignored_functions' => ['call_user_func', 'call_user_func_array']
-    ]
-);
-```
 
 
 Profile an Application or Site
@@ -303,21 +259,17 @@ php external/import.php -f /path/to/file
 MongoDB, resulting in duplicate profiles
 
 
-Limiting MongoDB Disk Usage
+限制MongoDB 的磁盘使用
 ---------------------------
 
-Disk usage can grow quickly, especially when profiling applications with large
-code bases or that use larger frameworks.
+由于监控系统数量量比较大，尤其是访问量大的项目，你可以使用MongoDB自动删除以前的采集数据。
 
-To keep the growth
-in check, configure MongoDB to automatically delete profiling documents once they
-have reached a certain age by creating a [TTL index](http://docs.mongodb.org/manual/core/index-ttl/).
+具体你们可以参考MongoDB的官方文档：[传送门](http://docs.mongodb.org/manual/core/index-ttl/).
 
-Decide on a maximum profile document age in seconds: you
-may wish to choose a lower value in development (where you profile everything),
-than production (where you profile only a selection of documents). The
-following command instructs Mongo to delete documents over 5 days (432000
-seconds) old.
+TTL索引是一个特殊的索引，目前只支持在单个的字段上设置索引，而且该字段必须是日期类型或者
+是包含日期类型的数组类型。我们可以通过createIndex方法来创建一个TTL索引，具体如下所示：.
+
+代码示例如下（需要注意的是过期时间的字段必须使用UTC时间：example:Sun Jan 24 2016 20:52:33 GMT+0800 (CST)）：.
 
 ```
 $ mongo
@@ -343,13 +295,13 @@ Some Notes:
  * The waterfall display is still very much in alpha.
  * Feedback and pull requests are welcome :)
 
-Using Tideways Extension
+使用 Tideways 扩展（推荐）
 ========================
 
-The XHProf PHP extension is not compatible with PHP7.0+. Instead you'll need to
-use the [tideways extension](https://github.com/tideways/php-profiler-extension).
+该扩展支持PHP7+版本，具体详情请查看 [tideways extension](https://github.com/tideways/php-profiler-extension).
 
-Once installed, you can use the following configuration data:
+安装好扩展后，你可以参考以下代码修改PHP配置文件
+
 
 ```ini
 [tideways]
@@ -361,32 +313,12 @@ tideways.auto_start=0
 tideways.sample_rate=100
 ```
 
-Releases / Changelog
+发布和更新
 ====================
 
-See the [releases](https://github.com/preinheimer/xhgui/releases) for changelogs,
-and release information.
+你可以到这里查看有关 [Predator](https://github.com/Longjianghu/Predator) 的发布和更新信息
 
-License
+其它说明
 =======
 
-Copyright (c) 2013 Mark Story & Paul Reinheimer
-
-Permission is hereby granted, free of charge, to any person obtaining a
-copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be included
-in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+欢迎任何企业或者个人使用 Predator，如果你在使用过程中遇到任何问题请到 [这里](https://github.com/Longjianghu/Predator) 提交，非常感谢！
