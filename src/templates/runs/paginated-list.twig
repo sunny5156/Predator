@@ -34,6 +34,9 @@
                         {{ helpers.sort_link('pmu', base_url, 'pmu', paging, search) }}
                     </span>
                 </th>
+                <th class="right">
+                    IP Address
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -69,6 +72,7 @@
             <td class="right">{{ result.get('main()', 'cpu') |as_time }}</td>
             <td class="right">{{ result.get('main()', 'mu') |as_bytes }}</td>
             <td class="right">{{ result.get('main()', 'pmu') |as_bytes }}</td>
+            <td class="right">{{result.meta('SERVER.REMOTE_ADDR')}}</td>
         </tr>
         {% else %}
         <tr>
