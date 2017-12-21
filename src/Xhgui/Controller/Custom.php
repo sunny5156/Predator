@@ -57,6 +57,17 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         $res = $this->_profiles->query($query, $retrieve)
             ->limit($perPage);
         $r = iterator_to_array($res);
+
+        $ext = new Xhgui_Twig_Extension($this->_app);
+
+        foreach($r as $key => $val){
+            foreach($r[$key]['profile']['main()'] as $k => $v){
+                $r[$key]['profile']['main()'][$k] = (in_array($k,array('mu','pmu')))?$ext->formatBytes($v):$ext->formatTime($v);
+            }
+
+            $r[$key]['meta']['SERVER']['REQUEST_TIME'] = date($this->_app->config('date.format'),$r[$key]['meta']['SERVER']['REQUEST_TIME']);
+        }
+
         return $response->body(json_encode($r));
     }
 }
