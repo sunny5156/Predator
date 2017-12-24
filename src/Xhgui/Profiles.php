@@ -242,6 +242,17 @@ class Xhgui_Profiles
     }
 
     /**
+     * 获取域名列表
+     *
+     * @access public
+     * @return array
+     */
+    public function getHost()
+    {
+        return $this->_collection->distinct('meta.SERVER.HTTP_HOST');
+    }
+
+    /**
      * Get a paginated set of results.
      *
      * @param array $options The find options to use.
