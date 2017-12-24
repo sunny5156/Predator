@@ -3,11 +3,13 @@ Predator
 
 Predator 是一款基于基于xhgui改进的图形管理界面，使用方法和xhgui完全一致。主要调整和优化的以下功能：
 
-1、更改bytes为kb或者mb，µs改为ms或者s，日期格式改为年-月-日 时：分：秒。
+1、修复原来系统中的BUG。
 
-2、列表项新增IP地址、显示完整访问地址。
+2、更改bytes为kb或者mb，µs改为ms或者s，日期格式改为年-月-日 时：分：秒。
 
-3、增加多域名显示功能，增加登录验证功
+3、列表项新增IP地址、显示完整访问地址。
+
+4、增加多域名显示功能，增加登录验证功能（todo）
 
 系统运行条件
 ===================
@@ -191,6 +193,8 @@ virtual host.
 
 With apache this would look like:
 
+Apache服务器配置示例如下：
+
 ```apache
 <VirtualHost *:80>
   php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
@@ -198,7 +202,8 @@ With apache this would look like:
   ServerName site.localhost
 </VirtualHost>
 ```
-With Nginx in fastcgi mode you could use:
+Nginx 服务器配置示例如下：
+
 
 ```nginx
 server {
@@ -277,7 +282,7 @@ $ mongo
 > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 ```
 
-Waterfall Display
+瀑布流显示
 -----------------
 
 The goal of XHGui's waterfall display is to recognize that concurrent requests can
@@ -321,4 +326,4 @@ tideways.sample_rate=100
 其它说明
 =======
 
-欢迎任何企业或者个人使用 Predator，如果你在使用过程中遇到任何问题请到 [这里](https://github.com/Longjianghu/Predator) 提交，非常感谢！
+欢迎任何企业或者个人使用 Predator，如果你在使用过程中遇到任何问题请到 [这里](https://github.com/Longjianghu/Predator/issues) 提交，非常感谢！
