@@ -19,5 +19,4 @@ class Xhgui_Controller
     {
         $this->_app->render($this->_template, $this->_templateVars);
     }
-
 }

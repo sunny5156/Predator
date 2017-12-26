@@ -110,7 +110,7 @@ class Xhgui_ServiceContainer extends Pimple
     protected function _controllers()
     {
         $this['watchController'] = function ($c) {
-            return new Xhgui_Controller_Watch($c['app'], $c['watchFunctions']);
+            return new Xhgui_Controller_Watch($c['app'], $c['profiles'],$c['watchFunctions']);
         };
 
         $this['runController'] = function ($c) {

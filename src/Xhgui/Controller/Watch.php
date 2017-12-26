@@ -2,13 +2,14 @@
 
 class Xhgui_Controller_Watch extends Xhgui_Controller
 {
-
     protected $_app;
     protected $_watches;
+    protected $_profiles;
 
-    public function __construct($app, $watches)
+    public function __construct($app, $profiles, $watches)
     {
         $this->_app = $app;
+        $this->_profiles = $profiles;
         $this->_watches = $watches;
     }
 
