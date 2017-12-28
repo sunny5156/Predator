@@ -128,6 +128,7 @@ h1, h2, h3, h4, h5, h6,
  *
  * Remove the borders and boxshadows bootstrap applies.
  */
+.pagination{text-align: center;}
 .pagination ul {
     border: none;
     -moz-box-shadow: none;
