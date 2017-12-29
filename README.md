@@ -9,7 +9,7 @@ Predator 是一款基于基于xhgui改进的图形管理界面，使用方法和
 
 3、列表项新增IP地址、显示完整访问地址。
 
-4、增加多域名显示功能，增加登录验证功能（todo）
+4、增加多域名筛选功能，增加登录验证功能（todo）
 
 系统运行条件
 ===================
@@ -43,6 +43,7 @@ Predator数据库。代码示例如下：
  ```
    $ mongo
    > use predator
+   > db.results.ensureIndex( { 'meta.SERVER.HTTP_HOST' : -1 } )
    > db.results.ensureIndex( { 'meta.SERVER.REQUEST_TIME' : -1 } )
    > db.results.ensureIndex( { 'profile.main().wt' : -1 } )
    > db.results.ensureIndex( { 'profile.main().mu' : -1 } )
@@ -66,14 +67,9 @@ Predator数据库。代码示例如下：
 配置服务器重写规则
 ----------------------------------
 
-建议使用Rewrite重写规则来进行配置，
-XHGui prefers to have URL rewriting enabled, but will work without it.
-For Apache, you can do the following to enable URL rewriting:
+建议使用Rewrite重写规则来进行配置，Apache服务器可以进行如下配置:
 
-1. Make sure that an .htaccess override is allowed and that AllowOverride
-   has the directive FileInfo set for the correct DocumentRoot.
-
-    Example configuration for Apache 2.4:
+1. 允许Apache使用rewrite模块对 URL 进行重写，Apache 2.4 配置示例如下:
     ```apache
     <Directory /var/www/xhgui/>
         Options Indexes FollowSymLinks
@@ -81,16 +77,15 @@ For Apache, you can do the following to enable URL rewriting:
         Require all granted
     </Directory>
     ```
-2. Make sure you are loading up mod_rewrite correctly.
-   You should see something like:
+2. 加载mod_rewrite模块:
 
     ```apache
     LoadModule rewrite_module libexec/apache2/mod_rewrite.so
     ```
 
-3. XHGui comes with a `.htaccess` file to enable the remaining rewrite rules.
+3. 利用项目自带的 `.htaccess`文件对项目进行重写.
 
-For nginx and fast-cgi, you can the following snippet as a start:
+Nginx配置示例如下:
 
 ```nginx
 server {
@@ -117,17 +112,8 @@ server {
 
 配置 Predator 采样率
 -------------------------------
+修改config/config.php文件中的profiler.enable方法可以自定义采样率（并且可以自定义采集条件）。
 
-After installing XHGui, you may want to do change how frequently you
-profile the host application. The `profiler.enable` configuration option
-allows you to provide a callback function that specifies the requests that
-are profiled. By default, XHGui profiles 1 in 100 requests.
-
-The following example configures XHGui to only profile requests
-from a specific URL path:
-
-The following example configures XHGui to profile 1 in 100 requests,
-excluding requests with the `/blog` URL path:
 
 ```php
 // In config/config.php
@@ -143,8 +129,7 @@ return array(
 );
 ```
 
-In contrast, the following example configured XHGui to profile *every*
-request:
+直接返回true 100%采样。
 
 ```php
 // In config/config.php
@@ -156,16 +141,11 @@ return array(
 );
 ```
 
-
-Configure 'Simple' URLs Creation
+自定义 'Simple' 选项
 --------------------------------
 
-XHGui generates 'simple' URLs for each profile collected. These URLs are
-used to generate the aggregate data used on the URL view. Since
-different applications have different requirements for how URLs map to
-logical blocks of code, the `profile.simple_url` configuration option
-allows you to provide specify the logic used to generate the simple URL.
-By default, all numeric values in the query string are removed.
+你可以修改config/config.php文件中的profiler.simple_url对simple_url进行自定义。
+
 
 ```php
 // In config/config.php
@@ -179,19 +159,10 @@ return array(
 
 The URL argument is the `REQUEST_URI` or `argv` value.
 
-
-Profile an Application or Site
+使用方法
 ==============================
-
-The simplest way to profile an application is to use
-`external/header.php`. `external/header.php` is designed to be combined
-with PHP's
-[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-pr
-epend-file) directive. You can enable `auto_prepend_file` system-wide
-through `php.ini`. Alternatively, you can enable `auto_prepend_file` per
-virtual host.
-
-With apache this would look like:
+在你的应用加载 external/header.php 文件或者在PHP.INI文件中配置[auto_prepend_file](https://secure.php.net/manual/en/ini.core.php#ini.auto-prepend-file)。
+ 自动加载external/header.php 文件。
 
 Apache服务器配置示例如下：
 
@@ -214,15 +185,10 @@ server {
 }
 ```
 
-Profile a CLI Script
+命令行模式的使用方法
 ====================
 
-The simplest way to profile a CLI is to use
-`external/header.php`. `external/header.php` is designed to be combined with PHP's
-[auto_prepend_file](http://www.php.net/manual/en/ini.core.php#ini.auto-prepend-file)
-directive. You can enable `auto_prepend_file` system-wide
-through `php.ini`. Alternatively,
-you can enable include the `header.php` at the top of your script:
+最简单的使用方法就是在项目中加载`external/header.php`文件:
 
 ```php
 <?php
@@ -230,38 +196,22 @@ require '/path/to/xhgui/external/header.php';
 // Rest of script.
 ```
 
-You can alternatively use the `-d` flag when running php:
+你可以在命令行模式下使用`-d`来配置php的运行参数,示例如下：
 
 ```bash
 php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
 ```
 
-Saving & Importing Profiles
+保存或者导入文件
 ---------------------------
-
-If your site cannot directly connect to your MongoDB instance, you can choose
-to save your data to a temporary file for a later import to XHGui's MongoDB
-database.
-
-To configure XHGui to save your data to a temporary file,
-change the `save.handler` setting to `file` and define your file's
-path with `save.handler.filename`.
-
-To import a saved file to MongoDB use XHGui's provided
-`external/import.php` script.
-
-Be aware of file locking: depending on your workload, you may need to
-change the `save.handler.filename` file path to avoid file locking
-during the import.
-
-The following demonstrate the use of `external/import.php`:
+如果你的站点暂时不支持MongoDB数据库，你可以选择保存为文件，使用`external/import.php`脚本来
+导入这前的文件。使用示例如下：
 
 ```bash
 php external/import.php -f /path/to/file
 ```
 
-**Warning**: Importing the same file twice will load twice the run datas inside
-MongoDB, resulting in duplicate profiles
+**注意事项**: 如果重复进行导入将产生多条相同的记录！
 
 
 限制MongoDB 的磁盘使用
@@ -284,21 +234,11 @@ $ mongo
 
 瀑布流显示
 -----------------
+瀑布流将以时间轴的方式进行展示，让你对项目有一个更直观的感受，帮助你进行相应的数据分析.
 
-The goal of XHGui's waterfall display is to recognize that concurrent requests can
-affect each other. Concurrent database requests, CPU-intensive
-activities and even locks on session files can become relevant. With an
-Ajax-heavy application, understanding the page build is far more complex than
-a single load: hopefully the waterfall can help. Remember, if you're only
-profiling a sample of requests, the waterfall fills you with impolite lies.
+友情提醒:
 
-Some Notes:
-
- * There should probably be more indexes on MongoDB for this to be performant.
- * The waterfall display introduces storage of a new `request_ts_micro` value, as second level
-   granularity doesn't work well with waterfalls.
- * The waterfall display is still very much in alpha.
- * Feedback and pull requests are welcome :)
+ * 使用mongodb的索引来提高响应速度.
 
 使用 Tideways 扩展（推荐）
 ========================
