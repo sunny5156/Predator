@@ -4,16 +4,26 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
 {
     protected $_app;
     protected $_profiles;
+    private $_domain = '';
 
     public function __construct($app, $profiles)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
+
+        $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
+
+        $this->_domain =$this->_app->request()->get('domain');
+        $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
     }
 
     public function get()
     {
         $this->_template = 'custom/create.twig';
+        $this->set(array(
+                       'domain' => $this->_domain,
+                       'host'   => $this->_profiles->getHttpHost()
+                   ));
     }
 
     public function help()
@@ -51,6 +61,8 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
             $json = json_encode(array('error' => $error));
             return $response->body($json);
         }
+
+        $query['meta.SERVER.HTTP_HOST'] = $this->_domain;
 
         $perPage = $this->_app->config('page.limit');
 

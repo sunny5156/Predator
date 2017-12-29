@@ -2,11 +2,23 @@
 
 class Xhgui_Controller_Run extends Xhgui_Controller
 {
+    private $_domain = '';
+
     public function __construct($app, $profiles, $watches)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
         $this->_watches = $watches;
+
+        $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
+
+        $this->_domain =$this->_app->request()->get('domain');
+        $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
+
+        $this->set(array(
+                       'domain' => $this->_domain,
+                       'host'   => $this->_profiles->getHttpHost()
+                   ));
     }
 
     public function index()
@@ -20,6 +32,9 @@ class Xhgui_Controller_Run extends Xhgui_Controller
                 $search[$key] = $request->get($key);
             }
         }
+
+        $search['domain'] = $this->_domain;
+
         $sort = $request->get('sort');
 
         $result = $this->_profiles->getAll(array(

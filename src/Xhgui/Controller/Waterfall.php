@@ -4,11 +4,17 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
 {
     protected $_app;
     protected $_profiles;
+    private $_domain = '';
 
     public function __construct($app, $profiles)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
+
+        $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
+
+        $this->_domain =$this->_app->request()->get('domain');
+        $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
     }
 
     public function index()
@@ -21,6 +27,9 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
                 $search[$key] = trim($request->get($key));
             }
         }
+
+        $search['domain'] = $this->_domain;
+
         $result = $this->_profiles->getAll(array(
             'sort' => 'time',
             'direction' => 'asc',
@@ -53,6 +62,9 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
         foreach ($keys as $key) {
             $search[$key] = $request->get($key);
         }
+
+        $search['domain'] = $this->_domain;
+
         $result = $this->_profiles->getAll(array(
             'sort' => 'time',
             'direction' => 'asc',
