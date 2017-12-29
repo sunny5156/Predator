@@ -472,3 +472,5 @@ body .d3-flame-graph .frame:hover .label {
 .text-right{
  text-align: right;
 }
+
+.dropdown-menu li>a.selected{background-color: #59bdd2; color: #fff;}

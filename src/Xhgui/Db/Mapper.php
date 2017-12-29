@@ -44,12 +44,19 @@ class Xhgui_Db_Mapper
         if (!empty($search['limit_custom']) && $search['limit_custom'][0] == "P") {
             $search['limit'] = $search['limit_custom'];
         }
+
         $hasLimit = (!empty($search['limit']) && $search['limit'] != -1);
 
         $conditions = array();
+
+        if (isset($search['domain'])) {
+            $conditions['meta.SERVER.HTTP_HOST'] = (string)$search['domain'];
+        }
+
         if (!empty($search['date_start']) && !$hasLimit) {
             $conditions['meta.request_date']['$gte'] = (string)$search['date_start'];
         }
+
         if (!empty($search['date_end']) && !$hasLimit) {
             $conditions['meta.request_date']['$lte'] = (string)$search['date_end'];
         }

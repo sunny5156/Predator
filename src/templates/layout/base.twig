@@ -27,6 +27,16 @@
                         <li><a href="{{ url('custom.view') }}">Custom View</a></li>
                         <li><a href="{{ url('watch.list') }}">Watch Functions</a></li>
                         <li><a href="{{ url('waterfall.list') }}">Waterfall</a></li>
+                        {% if host %}
+                        <li style="position: relative;">
+                            <a href="javascript:void(0);" id="host" data-toggle="dropdown">{% if domain %}{{ domain }}{% else %}Switch{% endif %}</a>
+                            <ul class="dropdown-menu" id="host">
+                                {% for k,v in host %}
+                                <li><a href="{{ url('home') }}?domain={{ v }}" {% if domain == v %}class="selected"{% endif %}>{{ v }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
