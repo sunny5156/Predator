@@ -49,7 +49,7 @@ class Xhgui_Db_Mapper
 
         $conditions = array();
 
-        if (isset($search['domain'])) {
+        if ( ! empty($search['domain'])) {
             $conditions['meta.SERVER.HTTP_HOST'] = (string)$search['domain'];
         }
 

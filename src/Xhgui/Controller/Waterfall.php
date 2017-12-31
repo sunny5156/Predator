@@ -49,7 +49,10 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'runs' => $result['results'],
             'search' => $search,
             'paging' => $paging,
+            'date_format' => $this->_app->config('date.format'),
             'base_url' => 'waterfall.list',
+            'domain' => $this->_domain,
+            'host'   => $this->_profiles->getHttpHost()
         ));
     }
 

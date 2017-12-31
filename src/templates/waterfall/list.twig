@@ -18,8 +18,8 @@
         <div class="control-group span4">
             <label class="control-label" for="start_date">Date/time range</label>
             <div class="controls">
-                <input type="text" class="span2" name="request_start" value="{{ search.request_start }}">
-                <input type="text" class="span2" name="request_end" value="{{ search.request_end }}">
+                <input type="text" class="datepicker span2" data-date-format="yyyy-mm-dd" name="request_start" value="{{ search.request_start }}">
+                <input type="text" class="datepicker span2" data-date-format="yyyy-mm-dd" name="request_end" value="{{ search.request_end }}">
                 <small class="muted">Either unix timestamps or date time string formatted as YYYY-MM-DD H:i:s</small>
             </div>
         </div>
@@ -133,6 +133,7 @@
 <script type="text/javascript" src="{{ static('js/waterfall.js') }}"></script>
 <script>
 $(document).ready(function() {
+    $('.datepicker').datepicker();
     {% set query = {
         remote_addr: search.remote_addr,
         request_start: search.request_start,

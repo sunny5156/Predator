@@ -5,12 +5,18 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
     protected $_app;
     protected $_watches;
     protected $_profiles;
+    private $_domain = '';
 
     public function __construct($app, $profiles, $watches)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
         $this->_watches = $watches;
+
+        $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
+
+        $this->_domain =$this->_app->request()->get('domain');
+        $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
     }
 
     public function get()
@@ -18,7 +24,11 @@ class Xhgui_Controller_Watch extends Xhgui_Controller
         $watched = $this->_watches->getAll();
 
         $this->_template = 'watch/list.twig';
-        $this->set(array('watched' => $watched));
+        $this->set(array(
+                       'watched' => $watched,
+                       'domain'  => $this->_domain,
+                       'host'    => $this->_profiles->getHttpHost()
+                   ));
     }
 
     public function post()

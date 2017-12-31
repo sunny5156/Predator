@@ -30,6 +30,10 @@ class Xhgui_Profiles
 
     public function query($conditions, $fields = null)
     {
+        if (empty($conditions['meta.SERVER.HTTP_HOST'])) {
+            unset($conditions['meta.SERVER.HTTP_HOST']);
+        }
+
         return $this->_collection->find($conditions, $fields);
     }
 
