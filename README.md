@@ -20,11 +20,8 @@ Predator运行有以下需求:
  * 系统支持[XHProf](http://pecl.php.net/package/xhprof),
    [Uprofiler](https://github.com/FriendsOfPHP/uprofiler) or
    [Tideways](https://github.com/tideways/php-profiler-extension) 这几个性能监控组件.
- * [MongoDB Extension](http://pecl.php.net/package/mongo) MongoDB PHP 扩展版本必须大于或者等于1.3.0.
- * [MongoDB](http://www.mongodb.org/) MongoDB版本必须大于或者等于 2.2.0.
- * [dom](http://php.net/manual/en/book.dom.php) If you are running the tests
-   you'll need the DOM extension (which is a dependency of PHPUnit).
-
+ * [MongoDB PHP 扩展](http://pecl.php.net/package/mongo) 版本必须大于或者等于1.3.0.
+ * [MongoDB](http://www.mongodb.org/)版本必须大于或者等于 2.2.0.
 
 安装说明
 ============
