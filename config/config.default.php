@@ -38,5 +38,5 @@ return array(
     },
 
     'profiler.options' => array(),
-
+	'passport' => array('admin' => 'admin888'),
 );
