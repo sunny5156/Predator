@@ -5,14 +5,22 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
     protected $_app;
     protected $_profiles;
     private $_domain = '';
+    private $_username = '';
 
     public function __construct($app, $profiles)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
 
+        $username = (isset($_COOKIE['username'])) ? Xhgui_Util::authcode($_COOKIE['username']) : '';
+
+        if (empty($username)) {
+            $app->redirect($app->urlFor('passport.index'));
+        }
+
         $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
 
+        $this->_username = $username;
         $this->_domain =$this->_app->request()->get('domain');
         $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
     }
@@ -51,6 +59,7 @@ class Xhgui_Controller_Waterfall extends Xhgui_Controller
             'paging' => $paging,
             'date_format' => $this->_app->config('date.format'),
             'base_url' => 'waterfall.list',
+            'username' => $this->_username,
             'domain' => $this->_domain,
             'host'   => $this->_profiles->getHttpHost()
         ));

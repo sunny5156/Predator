@@ -37,6 +37,11 @@
                             </ul>
                         </li>
                         {% endif %}
+                        {% if username %}
+                        <li><a href="{{ url('passport.logout') }}">Sign out</a></li>
+                        {% else %}
+                            <li><a href="{{ url('passport.index') }}">Sign In</a></li>
+                        {% endif %}
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>

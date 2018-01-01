@@ -3,6 +3,7 @@
 class Xhgui_Controller_Run extends Xhgui_Controller
 {
     private $_domain = '';
+    private $_username = '';
 
     public function __construct($app, $profiles, $watches)
     {
@@ -10,12 +11,20 @@ class Xhgui_Controller_Run extends Xhgui_Controller
         $this->_profiles = $profiles;
         $this->_watches = $watches;
 
+        $username = (isset($_COOKIE['username'])) ? Xhgui_Util::authcode($_COOKIE['username'], 'DECODE') : '';
+
+        if (empty($username)) {
+            $app->redirect($app->urlFor('passport.index'));
+        }
+
         $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
 
+        $this->_username = $username;
         $this->_domain =$this->_app->request()->get('domain');
         $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
 
         $this->set(array(
+                        'username' => $this->_username,
                        'domain' => $this->_domain,
                        'host'   => $this->_profiles->getHttpHost()
                    ));

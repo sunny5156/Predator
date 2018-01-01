@@ -5,6 +5,7 @@ class Xhgui_Controller
     protected $_templateVars = array();
     protected $_template     = null;
 
+
     public function set($vars)
     {
         $request = $this->_app->request();

@@ -82,7 +82,6 @@ $app->post('/watch', function () use ($di) {
     $di['watchController']->post();
 })->name('watch.save');
 
-
 // Custom report routes.
 $app->get('/custom', function () use ($di, $app) {
     $app->controller = $di['customController'];
@@ -98,7 +97,6 @@ $app->post('/custom/query', function () use ($di) {
     $di['customController']->query();
 })->name('custom.query');
 
-
 // Waterfall routes
 $app->get('/waterfall', function () use ($di, $app) {
     $app->controller = $di['waterfallController'];
@@ -108,3 +106,16 @@ $app->get('/waterfall', function () use ($di, $app) {
 $app->get('/waterfall/data', function () use ($di) {
     $di['waterfallController']->query();
 })->name('waterfall.data');
+
+$app->get('/passport', function () use ($di, $app) {
+    $app->controller = $di['passportController'];
+    $app->controller->index();
+})->name('passport.index');
+
+$app->post('/passport/signin', function () use ($di, $app) {
+    $di['passportController']->signin();
+})->name('passport.signin');
+
+$app->get('/passport/logout', function () use ($di, $app) {
+    $di['passportController']->logout();
+})->name('passport.logout');

@@ -5,14 +5,22 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
     protected $_app;
     protected $_profiles;
     private $_domain = '';
+    private $_username = '';
 
     public function __construct($app, $profiles)
     {
         $this->_app = $app;
         $this->_profiles = $profiles;
 
+        $username = (isset($_COOKIE['username'])) ? Xhgui_Util::authcode($_COOKIE['username']) : '';
+
+        if (empty($username)) {
+            $app->redirect($app->urlFor('passport.index'));
+        }
+
         $cookie = (isset($_COOKIE['domain'])) ? $_COOKIE['domain'] : '';
 
+        $this->_username = $username;
         $this->_domain =$this->_app->request()->get('domain');
         $this->_domain = ( ! empty($this->_domain)) ? $this->_domain : $cookie;
     }
@@ -21,6 +29,7 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
     {
         $this->_template = 'custom/create.twig';
         $this->set(array(
+                       'username' => $this->_username,
                        'domain' => $this->_domain,
                        'host'   => $this->_profiles->getHttpHost()
                    ));
@@ -47,7 +56,9 @@ class Xhgui_Controller_Custom extends Xhgui_Controller
         $response['Content-Type'] = 'application/json';
 
         $query = json_decode($request->post('query'), true);
+
         $error = array();
+
         if (is_null($query)) {
             $error['query'] = json_last_error();
         }
