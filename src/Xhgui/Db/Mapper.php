@@ -102,14 +102,7 @@ class Xhgui_Db_Mapper
 
     protected function _convertDate($dateString)
     {
-        if (is_numeric($dateString)) {
-            return (float) $dateString;
-        }
-        $date = DateTime::createFromFormat('Y-m-d H:i:s', $dateString);
-        if (!$date) {
-            return $date;
-        }
-        return $date->getTimestamp();
+        return (is_numeric($dateString)) ? $dateString : strtotime($dateString);
     }
 
     protected function _direction($options)

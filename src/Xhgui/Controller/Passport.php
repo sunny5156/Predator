@@ -40,7 +40,7 @@ class Xhgui_Controller_Passport extends Xhgui_Controller
             $app     = $this->_app;
             $request = $app->request();
 
-            $account = $app->config('account');
+            $passport = $app->config('passport');
 
             $username = $request->post('username');
             $password = $request->post('password');
@@ -49,11 +49,11 @@ class Xhgui_Controller_Passport extends Xhgui_Controller
                 throw new \Exception('Your username/password is missing.');
             }
 
-            if ( ! isset($account[$username])) {
+            if ( ! isset($passport[$username])) {
                 throw new \Exception('Login failed.');
             }
 
-            if ($account[$username] != $password) {
+            if ($passport[$username] != $password) {
                 throw new \Exception('Login failed.');
             }
 
