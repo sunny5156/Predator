@@ -52,7 +52,7 @@ predator数据库。代码示例如下：
 6. 进入目录后使用php install.php 来安装 composer 来管理系统所需要的扩展。代码示例如下：
 
    ```bash
-   cd path/to/xhgui
+   cd /predator/xhgui
    php install.php
    ```
 
@@ -90,7 +90,7 @@ server {
     server_name example.com;
 
     # root directive should be global
-    root   /var/www/example.com/public/xhgui/webroot/;
+    root   /var/www/example.com/public/predator/webroot/;
     index  index.php;
 
     location / {
@@ -165,8 +165,8 @@ Apache服务器配置示例如下：
 
 ```apache
 <VirtualHost *:80>
-  php_admin_value auto_prepend_file "/xhgui/external/header.php"
-  DocumentRoot "/xhgui/webroot/"
+  php_admin_value auto_prepend_file "/predator/external/header.php"
+  DocumentRoot "/predator/webroot/"
   ServerName site.localhost
 </VirtualHost>
 ```
@@ -177,8 +177,8 @@ Nginx 服务器配置示例如下：
 server {
   listen 80;
   server_name site.localhost;
-  root /xhgui/webroot/;
-  fastcgi_param PHP_VALUE "auto_prepend_file=/xhgui/external/header.php";
+  root /predator/webroot/;
+  fastcgi_param PHP_VALUE "auto_prepend_file=/predator/external/header.php";
 }
 ```
 
@@ -189,14 +189,14 @@ server {
 
 ```php
 <?php
-require '/path/to/xhgui/external/header.php';
+require '/predator/external/header.php';
 // Rest of script.
 ```
 
 你可以在命令行模式下使用`-d`来配置php的运行参数,示例如下：
 
 ```bash
-php -d auto_prepend_file=/path/to/xhgui/external/header.php do_work.php
+php -d auto_prepend_file=/predator/external/header.php do_work.php
 ```
 
 保存或者导入文件
