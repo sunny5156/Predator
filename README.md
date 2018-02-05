@@ -30,7 +30,7 @@ Predator运行有以下需求:
 
 2. 服务器根目录指定到 Predator 文件夹下的 webroot目录.
 
-3. 设置 cache 目录权限为 07777。Linux运行如下命令：chmod 0777 cache -R
+3. 设置 cache 目录权限为 0777。Linux运行如下命令：chmod 0777 cache -R
 
 4. 安装并启动MongoDB（config/config.php文件中的配置选项请根据实现情况进行调整）.
 
