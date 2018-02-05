@@ -52,7 +52,7 @@ predator数据库。代码示例如下：
 6. 进入目录后使用php install.php 来安装 composer 来管理系统所需要的扩展。代码示例如下：
 
    ```bash
-   cd /predator/xhgui
+   cd /Predator/xhgui
    php install.php
    ```
 
@@ -61,6 +61,8 @@ predator数据库。代码示例如下：
 服务器配置
 =============
 
+文档中的__PATH__请替换为你的项目实际路径。
+
 配置服务器重写规则
 ----------------------------------
 
@@ -68,7 +70,7 @@ predator数据库。代码示例如下：
 
 1. 允许Apache使用rewrite模块对 URL 进行重写，Apache 2.4 配置示例如下:
     ```apache
-    <Directory /var/www/xhgui/>
+    <Directory /Predator/>
         Options Indexes FollowSymLinks
         AllowOverride FileInfo
         Require all granted
@@ -90,7 +92,7 @@ server {
     server_name example.com;
 
     # root directive should be global
-    root   /var/www/example.com/public/predator/webroot/;
+    root   __PATH__/webroot/;
     index  index.php;
 
     location / {
@@ -165,8 +167,8 @@ Apache服务器配置示例如下：
 
 ```apache
 <VirtualHost *:80>
-  php_admin_value auto_prepend_file "/predator/external/header.php"
-  DocumentRoot "/predator/webroot/"
+  php_admin_value auto_prepend_file "/Predator/external/header.php"
+  DocumentRoot "__PATH__/webroot/"
   ServerName site.localhost
 </VirtualHost>
 ```
@@ -177,8 +179,8 @@ Nginx 服务器配置示例如下：
 server {
   listen 80;
   server_name site.localhost;
-  root /predator/webroot/;
-  fastcgi_param PHP_VALUE "auto_prepend_file=/predator/external/header.php";
+  root __PATH__/webroot/;
+  fastcgi_param PHP_VALUE "auto_prepend_file=__PATH__/external/header.php";
 }
 ```
 
@@ -189,14 +191,14 @@ server {
 
 ```php
 <?php
-require '/predator/external/header.php';
+require '__PATH__/external/header.php';
 // Rest of script.
 ```
 
 你可以在命令行模式下使用`-d`来配置php的运行参数,示例如下：
 
 ```bash
-php -d auto_prepend_file=/predator/external/header.php do_work.php
+php -d auto_prepend_file=__PATH__/external/header.php do_work.php
 ```
 
 保存或者导入文件
