@@ -26,6 +26,8 @@ Predator运行有以下需求:
 安装说明
 ============
 
+请将文档中__PATH__替换为你项目的实际部署路径。
+
 1. 从Github上克隆Predator项目代码.
 
 2. 服务器根目录指定到 Predator 文件夹下的 webroot目录.
@@ -51,8 +53,8 @@ predator数据库。代码示例如下：
 
 6. 进入目录后使用php install.php 来安装 composer 来管理系统所需要的扩展。代码示例如下：
 
-   ```
-   cd /Predator/xhgui
+   ```bash
+   cd __PATH__/
    php install.php
    ```
 
@@ -60,8 +62,6 @@ predator数据库。代码示例如下：
 
 服务器配置
 =============
-
-文档中的__PATH__请替换为你的项目实际路径。
 
 配置服务器重写规则
 ----------------------------------
@@ -167,7 +167,7 @@ Apache服务器配置示例如下：
 
 ```apache
 <VirtualHost *:80>
-  php_admin_value auto_prepend_file "/Predator/external/header.php"
+  php_admin_value auto_prepend_file "__PATH__/external/header.php"
   DocumentRoot "__PATH__/webroot/"
   ServerName site.localhost
 </VirtualHost>
