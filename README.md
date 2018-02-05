@@ -70,7 +70,7 @@ predator数据库。代码示例如下：
 
 1. 允许Apache使用rewrite模块对 URL 进行重写，Apache 2.4 配置示例如下:
     ```apache
-    <Directory /Predator/>
+    <Directory __PATH__/>
         Options Indexes FollowSymLinks
         AllowOverride FileInfo
         Require all granted
