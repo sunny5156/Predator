@@ -165,8 +165,8 @@ Apache服务器配置示例如下：
 
 ```apache
 <VirtualHost *:80>
-  php_admin_value auto_prepend_file "/Users/markstory/Sites/xhgui/external/header.php"
-  DocumentRoot "/Users/markstory/Sites/awesome-thing/app/webroot/"
+  php_admin_value auto_prepend_file "/xhgui/external/header.php"
+  DocumentRoot "/xhgui/webroot/"
   ServerName site.localhost
 </VirtualHost>
 ```
@@ -177,8 +177,8 @@ Nginx 服务器配置示例如下：
 server {
   listen 80;
   server_name site.localhost;
-  root /Users/markstory/Sites/awesome-thing/app/webroot/;
-  fastcgi_param PHP_VALUE "auto_prepend_file=/Users/markstory/Sites/xhgui/external/header.php";
+  root /xhgui/webroot/;
+  fastcgi_param PHP_VALUE "auto_prepend_file=/xhgui/external/header.php";
 }
 ```
 
@@ -225,7 +225,7 @@ TTL索引是一个特殊的索引，目前只支持在单个的字段上设置�
 
 ```
 $ mongo
-> use xhprof
+> use predator
 > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 ```
 
