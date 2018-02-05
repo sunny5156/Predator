@@ -11,7 +11,7 @@ Predator 是一款基于基于xhgui改进的图形管理系统，使用方法和
 
 4、增加多域名筛选功能，增加登录验证功能（用户名密码请在配置文件中自行配置）
 
-系统运行条件
+运行环境
 ===================
 
 Predator运行有以下需求:
@@ -32,10 +32,10 @@ Predator运行有以下需求:
 
 3. 设置 cache 目录权限为 0777。Linux运行如下命令：chmod 0777 cache -R
 
-4. 安装并启动MongoDB（config/config.php文件中的配置选项请根据实现情况进行调整）.
+4. 安装并启动MongoDB（需要自己把config目录下的config.default.php重命名为config.php,配置选项请根据实际情况进行调整。）.
 
 5. 使用db.collection.ensureIndex()命令为MongoDB添加索引.代码示例如下：系统默认使用
-Predator数据库。代码示例如下：
+predator数据库。代码示例如下：
 
  ```
    $ mongo
@@ -228,14 +228,6 @@ $ mongo
 > use xhprof
 > db.results.ensureIndex( { "meta.request_ts" : 1 }, { expireAfterSeconds : 432000 } )
 ```
-
-瀑布流显示
------------------
-瀑布流将以时间轴的方式进行展示，让你对项目有一个更直观的感受.
-
-友情提醒:
-
- * 使用mongodb的索引来提高响应速度.
 
 使用 Tideways 扩展（推荐）
 ========================
