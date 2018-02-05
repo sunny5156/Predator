@@ -51,7 +51,7 @@ predator数据库。代码示例如下：
 
 6. 进入目录后使用php install.php 来安装 composer 来管理系统所需要的扩展。代码示例如下：
 
-   ```bash
+   ```
    cd /Predator/xhgui
    php install.php
    ```
